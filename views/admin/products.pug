@@ -12,12 +12,12 @@ block content
             header.card__header
               h1.product__title #{product.title}
             div.card__image
-              img(src="#{product.imageUrl}", alt="")
+              img(src=`${product.imageUrl}`, alt="")
             div.card__content
               h2.product__price $#{product.price}
               p.product__description #{product.description}
             .card__actions
-              a(href="/admin/edit-product" class="btn") Edit
+              a(href="/admin/edit-product/" + product.id class="btn") Edit
               form(action="/admin/delete-product" method="POST")
                 button.btn Delete
     else
