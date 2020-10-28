@@ -18,8 +18,8 @@ block content
               p.product__description #{product.description}
             .card__actions
               a(href="/products/" + product.id class="btn") Details
-              form(action="/add-to-cart" method="POST")
-                button.btn Add to Cart
+              +add-to-cart(product)
+              
     else
       h1 No Products
       
