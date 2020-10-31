@@ -40,8 +40,8 @@ exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId
   const updatedTitle = req.body.title
   const updatedPrice = req.body.price
-  const updatedDescription = req.body.description
   const updatedImageUrl = req.body.imageUrl
+  const updatedDescription = req.body.description
   const updatedProduct = new Product(
     prodId,
     updatedTitle,
@@ -50,7 +50,7 @@ exports.postEditProduct = (req, res, next) => {
     updatedPrice
   )
   updatedProduct.save()
-  res.redirect('/admin')
+  res.redirect('/')
 }
 
 exports.getProducts = (req, res, next) => {
