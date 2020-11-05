@@ -6,8 +6,9 @@ block content
       ul 
         for product in products
           li 
-            p #{product.productData.title} #{product.qty}
+            p #{product.productData.title} (#{product.qty})
             form(action="/cart-delete-item" method="POST")
+              input(type="hidden" value=`${product.productData.id}` name="productId")
               button(class="btn" type="submit") Delete
     else 
       h1 Nothing here yet!
