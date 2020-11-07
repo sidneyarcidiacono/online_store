@@ -3,12 +3,21 @@ const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 
+const errorController = require('./controllers/errors')
+const db = require('./util/database')
+
+const app = express()
+
 const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
 
-const errorController = require('./controllers/errors')
-
-const app = express()
+db.execute('SELECT * FROM products')
+  .then(result => {
+    console.log(result[0], result[1])
+  })
+  .catch(err => {
+    console.log(err)
+  })
 
 app.set('view engine', 'pug')
 
