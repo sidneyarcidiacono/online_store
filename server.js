@@ -4,20 +4,12 @@ const express = require('express')
 const bodyParser = require('body-parser')
 
 const errorController = require('./controllers/errors')
-const db = require('./util/database')
+const mongoConnect = require('./util/database')
 
 const app = express()
 
 const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
-
-db.execute('SELECT * FROM products')
-  .then(result => {
-    console.log(result[0], result[1])
-  })
-  .catch(err => {
-    console.log(err)
-  })
 
 app.set('view engine', 'pug')
 
@@ -29,4 +21,8 @@ app.use(shopRoutes)
 
 app.use(errorController.show404)
 
-app.listen(3000)
+
+mongoConnect((client) => {
+  console.log(client)
+  app.listen(3000)
+})
