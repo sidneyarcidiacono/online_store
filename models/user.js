@@ -10,7 +10,7 @@ class User {
   }
 
   save() {
-    db = getDb()
+    const db = getDb()
     return db.collection('users').insertOne(this)
       .then(result => {
         console.log(result)
@@ -21,15 +21,9 @@ class User {
   }
 
   static findById(userId) {
-    db = getDb()
-    return db.collection('users').find({_id: ObjectId(userId)})
-      .next()
-      .then(user => {
-        console.log(user)
-        return user
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    const db = getDb()
+    return db.collection('users').findOne({_id: ObjectId(userId)})
   }
 }
+
+module.exports = User
