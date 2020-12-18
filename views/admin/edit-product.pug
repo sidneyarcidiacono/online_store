@@ -17,7 +17,7 @@ block content
         label(for='description') Description
         textarea(name='description', rows='5', value=(editing ? product.description : ''))#description
       if editing
-        input(type="hidden" value=`${product.id}` name="productId")
+        input(type="hidden" value=`${product._id}` name="productId")
       if editing
         button.btn(type="submit") Update Product
       else
