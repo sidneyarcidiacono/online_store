@@ -1,13 +1,21 @@
+const User = require('../models/user')
+
 exports.getLogin = (req, res, next) => {
-  console.log(req.session.isAuthenticated)
+  console.log(`Is Authenticated? ${req.session.isAuthenticated}`)
+  console.log(`Session user: ${req.session.user}`)
   res.render('auth/login', {
     path: '/login',
     pageTitle: 'Login',
-    isAuthenticated: false
+    isAuthenticated: req.session.isAuthenticated
   })
 }
 
 exports.postLogin = (req, res, next) => {
-  req.session.isAuthenticated = true
-  res.redirect('/')
+  User.findById("5fe0079b08f2566ec88854db")
+    .then(user => {
+      req.session.isAuthenticated = true
+      req.session.user = user
+      res.redirect('/')
+    })
+    .catch(err => console.log(err))
 }
