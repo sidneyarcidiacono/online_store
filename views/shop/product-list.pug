@@ -18,7 +18,8 @@ block content
               p.product__description #{product.description}
             .card__actions
               a(href="/products/" + product._id class="btn") Details
-              +add-to-cart(product)
+              if isAuthenticated
+                +add-to-cart(product)
               
     else
       h1 No Products
