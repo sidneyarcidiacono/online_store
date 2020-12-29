@@ -10,6 +10,7 @@ html
   body
     include ../mixins/add-to-cart
     header.main-header
+      button(id="side-menu-toggle") Menu
       nav.main-header__nav
         ul.main-header__item-list
           li.main-header__item
@@ -26,13 +27,16 @@ html
               a(href='/admin/add-product', class=(path==='/admin/add-product' ? 'active' : '')) Add Product
             li.main-header__item
               a(href='/admin/products', class=(path==='/admin/products' ? 'active' : '')) Admin Products
-            li.main-header__item
-              form(action="/logout", method="POST")
-                button(type="submit") Logout
+            
         else
           ul.main-header__item-list
-            li.main-header__item
-              a(href="/login", class=(path==='/login' ? 'active' : '')) Login
+            if !isAuthenticated
+              li.main-header__item
+                a(href="/login", class=(path==='/login' ? 'active' : '')) Login
+            else
+              li.main-header__item
+                form(action="/logout", method="POST")
+                  button(type="submit") Logout
             
       nav.mobile-nav
         ul.mobile-nav__item-list
