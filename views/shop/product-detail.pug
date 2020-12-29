@@ -8,4 +8,5 @@ block content
       img(src=`${product.imageUrl}` alt=`${product.title}`)
     h2 #{product.price}
     p #{product.description}
-    +add-to-cart(product)
+    if isAuthenticated
+      +add-to-cart(product)
