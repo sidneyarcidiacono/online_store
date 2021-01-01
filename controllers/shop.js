@@ -95,7 +95,7 @@ req.user
       const order = new Order({
         user: {
           email: req.user.email,
-          password: req.user.password
+          userId: req.user
         },
         products: products
       })
