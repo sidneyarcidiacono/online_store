@@ -37,8 +37,7 @@ exports.getIndex = (req, res, next) => {
       res.render('shop/index', {
         prods: products,
         pageTitle: 'Shop',
-        path: '/',
-        isAuthenticated: req.session.isAuthenticated
+        path: '/'
       })
     })
     .catch(err => {
@@ -95,8 +94,8 @@ req.user
       })
       const order = new Order({
         user: {
-          name: req.user.name,
-          userId: req.user
+          email: req.user.email,
+          password: req.user.password
         },
         products: products
       })
