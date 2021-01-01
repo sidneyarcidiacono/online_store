@@ -42,18 +42,19 @@ exports.postSignup = (req, res, next) => {
         // Later, we'll work on showing the user a message to tell them what went wrong
         return res.redirect('/signup')
       }
-      return bcrypt.hash(password, 12)
-    })
-    .then(hashedPassword => {
-      const user = new User({
-        email: email,
-        password: hashedPassword,
-        cart: { items: [] }
+      return bcrypt
+        .hash(password, 12)
+        .then(hashedPassword => {
+          const user = new User({
+            email: email,
+            password: hashedPassword,
+            cart: { items: [] }
+          })
+          return user.save()
+        })
+        .then(result => {
+          res.redirect('/login')
       })
-      return user.save()
-    })
-    .then(result => {
-      res.redirect('/login')
     })
     .catch(err => {
       console.log(err)
