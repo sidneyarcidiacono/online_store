@@ -19,15 +19,33 @@ exports.getSignup = (req, res, next) => {
 }
 
 exports.postLogin = (req, res, next) => {
-  User.findById('5bab316ce0a7c75f783cb8a8')
+  const email = req.body.email
+  const password = req.body.password
+  User.findOne({ email: email })
     .then(user => {
-      req.session.isLoggedIn = true
-      req.session.user = user
-      req.session.save(err => {
-        console.log(err)
-        res.redirect('/')
+      if (!user) {
+        // Later, we'll show the user an error message so they know what went wrong
+        return res.redirect('/login')
+      }
+      bcrypt.compare(password, user.password)
+        .then(doMatch => {
+          if (doMatch) {
+            req.session.isAuthenticated = true
+            req.session.user = user
+            return req.session.save(err => {
+              console.log(err)
+              res.redirect('/')
+          })
+        }
+          // Later, we'll tell the user they entered the wrong password
+          res.redirect('/login')
+        })
+        .catch(err => {
+          // Later, we'll show the user an error message
+          // We only make it in here if we get an error NOT if the passwords do not match.
+          res.redirect('/login')
+        })
       })
-    })
     .catch(err => console.log(err))
 }
 
