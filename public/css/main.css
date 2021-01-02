@@ -236,14 +236,16 @@ form {
   margin: auto;
   width: 90%;
   text-align: center;
-  /* border: 1px solid #4771fa; */
-  /* padding: 1rem; */
-  /* border-radius: 3px; */
-  /* background: #b9c9ff; */
+  border: 1px solid #4771fa;
+  padding: 1rem;
+  border-radius: 3px;
+  background: #b9c9ff;
 }
 
 .user-message {
   color: red;
+  border: 1px solid red;
+  background: #FFD5CB;
 }
 
 @media (min-width: 768px) {
