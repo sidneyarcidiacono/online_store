@@ -1,7 +1,11 @@
+const crypto = require('crypto')
+
 const bcrypt = require('bcryptjs')
 const sgMail = require('@sendgrid/mail')
 
 const User = require('../models/user')
+// Initialize our mail sender API key
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 
 exports.getLogin = (req, res, next) => {
@@ -86,11 +90,9 @@ exports.postSignup = (req, res, next) => {
         })
         .then(result => {
           res.redirect('/login')
-          // javascript
-          sgMail.setApiKey(process.env.SENDGRID_API_KEY)
           const msg = {
-            to: email, // Change to your recipient
-            from: 'sid.arcidiacono@students.makeschool.com', // Change to your verified sender
+            to: email, // recipient
+            from: 'sid.arcidiacono@students.makeschool.com', // sendgrid verified sender
             subject: 'Thank you for signing up!',
             text: 'We are glad you are here.',
             html: '<strong>Buy some snakes.</strong>',
@@ -130,4 +132,50 @@ exports.getReset = (req, res, next) => {
     pageTitle: 'Reset Password',
     errorMessage: message
   }
+}
+
+exports.postReset = (req, res, next) => {
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err)
+      return redirect('/reset')
+    }
+    const token = buffer.toString('hex')
+    User.findOne({ email: req.body.email })
+      .then(user => {
+        // Not getting this error message for some reason
+        if (!user) {
+          console.log('No user to be found, we should get an error message')
+          req.flash('error', "No account with that email found!")
+          return res.redirect('/reset')
+        }
+        user.resetToken = token
+        user.resetTokenExpiration = Date.now() + 360000
+        return user.save()
+      .then(result => {
+        res.redirect('/')
+        const msg = {
+          to: req.body.email, // Change to your recipient
+          from: 'sid.arcidiacono@students.makeschool.com', // Change to your verified sender
+          subject: 'Password Reset Requested',
+          text: 'This email is valid for one hour.',
+          html: `
+            <p>You requested a password reset from NodeOnlineStore.</p>
+            <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>
+            <small>If this wasn't you, contact us now.</small>
+            `,
+        }
+        sgMail
+          .send(msg)
+          .then(() => {
+            console.log('Email sent')
+          })
+          .catch((error) => {
+            console.error(error)
+          })
+      })
+      .catch(err => console.log(err))
+    })
+      .catch(err => console.log(err))
+  })
 }
