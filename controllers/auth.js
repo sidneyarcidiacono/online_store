@@ -6,7 +6,7 @@ exports.getLogin = (req, res, next) => {
   res.render('auth/login', {
     path: '/login',
     pageTitle: 'Login',
-    isAuthenticated: false
+    errorMessage: req.flash('error')
   })
 }
 
@@ -14,7 +14,7 @@ exports.getSignup = (req, res, next) => {
   res.render('auth/signup', {
     path: '/signup',
     pageTitle: 'Signup',
-    isAuthenticated: false
+    errorMessage: req.flash('error')
   })
 }
 
@@ -25,6 +25,7 @@ exports.postLogin = (req, res, next) => {
     .then(user => {
       if (!user) {
         // Later, we'll show the user an error message so they know what went wrong
+        req.flash('error', "Invalid email or password")
         return res.redirect('/login')
       }
       bcrypt.compare(password, user.password)
@@ -38,6 +39,7 @@ exports.postLogin = (req, res, next) => {
           })
         }
           // Later, we'll tell the user they entered the wrong password
+          
           res.redirect('/login')
         })
         .catch(err => {
