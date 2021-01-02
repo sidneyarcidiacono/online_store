@@ -210,15 +210,17 @@ exports.postNewPassword = (req, res, next) => {
   User.findOne({resetToken: token, resetTokenExpiration: {$gt: Date.now()}, _id: userId})
     .then(user => {
       resetUser = user
+      console.log(`resetUser from first then: ${resetUser}`)
       return bcrypt.hash(newPassword, 12)
     })
     .then(hashedPassword => {
       resetUser.password = hashedPassword
       resetUser.resetToken = undefined
       resetUser.resetTokenExpiration = undefined
-      return resetUser.save()
+      return resetUser.save(err => console.log(err))
     })
     .then(result => {
+      console.log(`Result from post route third then: ${result}`)
       res.redirect('/login')
     })
     .catch(err => console.log(err))
