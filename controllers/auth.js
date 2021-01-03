@@ -3,7 +3,11 @@ const crypto = require('crypto')
 const bcrypt = require('bcryptjs')
 const sgMail = require('@sendgrid/mail')
 
+const { validationResult } = require('express-validator')
+
 const User = require('../models/user')
+
+
 // Initialize our mail sender API key
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
@@ -71,6 +75,16 @@ exports.postSignup = (req, res, next) => {
   const email = req.body.email
   const password = req.body.password
   const confirmPassword = req.body.confirmPassword
+  const errors = validationResult(req)
+  console.log(errors)
+  if (!errors.isEmpty()) {
+    console.log(errors.array())
+    return res.status(422).render('auth/signup', {
+      path: '/signup',
+      pageTitle: 'Signup',
+      errorMessage: errors.array()[0].msg
+    })
+  }
   // Alternatively, add "unique" to mongo schema to avoid another query/duplicate users with the same email
   User.findOne({ email: email })
     .then(userDoc => {
